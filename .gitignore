@@ -1,0 +1,6 @@
+# Ignore everything in the home directory by default
+/*
+
+# Except our project folder
+!/esp32_c3_oled_042/
+/.gitignore
