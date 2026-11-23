@@ -45,7 +45,7 @@ esp32_c3_oled_042/
 ---
 
 ## 🛠️ Getting Started & Flashing
-1. Open `esp32_c3_oled_042/wifi_scanner/wifi_scanner.ino` in **Arduino IDE**.
+1. Open `wifi_scanner/wifi_scanner.ino` in **Arduino IDE**.
 2. Install required library: **U8g2** (by Olikraus) via Library Manager.
 3. Select board: **ESP32C3 Dev Module** (or `esp32:esp32:esp32c3`).
 4. Connect via USB-C and upload!
