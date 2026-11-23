@@ -1,6 +1,6 @@
-# ESP32-C3 0.42" OLED Wi-Fi Scanner
+# ESP32-C3 0.42" OLED Scanners
 
-A lightweight, portable Wi-Fi scanner and signal monitor designed for tiny ESP32-C3 microcontrollers featuring an onboard 0.42-inch monochrome OLED display (72x40 pixels, SSD1306 driver).
+Lightweight Wi-Fi and Bluetooth Low Energy (BLE) scanner firmware for the ESP32-C3 with its onboard 0.42-inch monochrome OLED display (72x40 pixels, SSD1306 driver).
 
 ---
 
@@ -27,17 +27,25 @@ A lightweight, portable Wi-Fi scanner and signal monitor designed for tiny ESP32
 
 ---
 
-## 🚀 Features
+## 🚀 Wi-Fi Scanner Features
 - **Asynchronous Wi-Fi Scanning**: Non-blocking network scanning (`WiFi.scanNetworks(true, false)`) to keep the UI responsive.
 - **Signal Strength Indicator**: Dynamic 4-bar RSSI graphical indicator for every detected network.
 - **Paged UI**: Automatically cycles through pages of 3 networks at a time with channel and RSSI dBm metrics.
 
 ---
 
+## Bluetooth Scanner
+
+The `bluetooth_scanner` sketch periodically scans for nearby BLE advertisements and shows each device name (or address when unnamed) with its signal strength. It displays two devices per page on the OLED and logs the results over serial. It does not connect to or interact with discovered devices.
+
 ## 📂 Project Structure
 ```text
 esp32_c3_oled_042/
 ├── DEVICE_SPEC.md              # Hardware specs & AI agent guidelines
+├── FLASHING.md                  # Detailed firmware flashing instructions
+├── flash.sh                     # Compile and flash Arduino sketches
+├── bluetooth_scanner/
+│   └── bluetooth_scanner.ino   # Arduino sketch for BLE scanning & OLED rendering
 └── wifi_scanner/
     └── wifi_scanner.ino        # Arduino sketch for Wi-Fi scanning & OLED rendering
 ```
@@ -45,7 +53,9 @@ esp32_c3_oled_042/
 ---
 
 ## 🛠️ Getting Started & Flashing
-1. Open `wifi_scanner/wifi_scanner.ino` in **Arduino IDE**.
-2. Install required library: **U8g2** (by Olikraus) via Library Manager.
+1. Open the desired `.ino` file (`wifi_scanner/wifi_scanner.ino` or `bluetooth_scanner/bluetooth_scanner.ino`) in **Arduino IDE**.
+2. Install required library: **U8g2** (by Olikraus) via Library Manager. BLE support is included with the ESP32 Arduino board package.
 3. Select board: **ESP32C3 Dev Module** (or `esp32:esp32:esp32c3`).
 4. Connect via USB-C and upload!
+
+For detailed terminal flashing instructions, port selection, and troubleshooting, see [FLASHING.md](./FLASHING.md). The quick command is `./flash.sh bluetooth_scanner`.
