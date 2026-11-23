@@ -46,6 +46,8 @@ esp32_c3_oled_042/
 ├── flash.sh                     # Compile and flash Arduino sketches
 ├── bluetooth_scanner/
 │   └── bluetooth_scanner.ino   # Arduino sketch for BLE scanning & OLED rendering
+├── desktop_assistant/
+│   └── desktop_assistant.ino  # Animated assistant eyes for the OLED display
 └── wifi_scanner/
     └── wifi_scanner.ino        # Arduino sketch for Wi-Fi scanning & OLED rendering
 ```
