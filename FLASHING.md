@@ -26,6 +26,24 @@ For the Wi-Fi scanner, run:
 ./flash.sh wifi_scanner
 ```
 
+For the combined dashboard and scanner app, run:
+
+```sh
+./flash.sh esp32_field_hub
+```
+
+The Field Hub uses the ESP32 `min_spiffs` partition layout (1.9 MB app with
+OTA support) because the combined BLE, Wi-Fi, OLED, and web interface firmware
+does not fit in the default 1.2 MB app partition. The helper selects this
+partition automatically for `esp32_field_hub`. Other sketches retain the
+board's default partition layout.
+
+The Field Hub creates an open, password-free Wi-Fi access point and an
+unauthenticated dashboard. The serial monitor at 115200 baud prints the
+network name. Join without entering a password and open
+`http://192.168.4.1/`. Anyone nearby can access scan results and change device
+settings. See the project README for details.
+
 The script compiles the sketch and then uploads it. By default it uses the ESP32-C3 Dev Module (`esp32:esp32:esp32c3`) and automatically selects a USB serial port when exactly one is detected.
 
 ## Select a port or board
@@ -46,6 +64,12 @@ To target a different Arduino-compatible board, pass its FQBN:
 
 ```sh
 ./flash.sh --fqbn arduino:avr:uno other_firmware
+```
+
+To override the ESP32 partition scheme, pass its Arduino menu option name:
+
+```sh
+./flash.sh --partition-scheme min_spiffs esp32_field_hub
 ```
 
 The sketch folder must contain an `.ino` file with the same name as the folder. You can pass either the folder or that `.ino` file to the script.

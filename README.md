@@ -2,6 +2,27 @@
 
 Lightweight Wi-Fi and Bluetooth Low Energy (BLE) scanner firmware for the ESP32-C3 with its onboard 0.42-inch monochrome OLED display (72x40 pixels, SSD1306 driver).
 
+## Combined Field Hub
+
+The new [`esp32_field_hub/`](./esp32_field_hub/) project combines the Wi-Fi
+scanner, BLE scanner, and animated desktop-assistant eyes in one firmware. It
+adds a responsive web dashboard hosted by the ESP32, customizable scan/display
+settings saved across restarts, and an optional connection to a home router
+while keeping the device's open access point available. The dashboard has no
+login.
+
+Flash it from the repository root with:
+
+```sh
+./flash.sh esp32_field_hub
+```
+
+The first boot prints the generated Wi-Fi name to the serial monitor at 115200
+baud. Join the open access point (no Wi-Fi password), then open
+`http://192.168.4.1/`. There is no dashboard login: anyone nearby can access
+scan results and change settings. Scanned Wi-Fi and BLE results are held in
+memory only; the app does not connect to discovered devices or networks.
+
 ---
 
 ## 📸 Working Prototype
@@ -46,6 +67,9 @@ esp32_c3_oled_042/
 ├── flash.sh                     # Compile and flash Arduino sketches
 ├── bluetooth_scanner/
 │   └── bluetooth_scanner.ino   # Arduino sketch for BLE scanning & OLED rendering
+├── esp32_field_hub/
+│   ├── esp32_field_hub.ino     # Combined scanner, assistant, and web server
+│   └── web_ui.h                # Embedded responsive dashboard
 ├── desktop_assistant/
 │   └── desktop_assistant.ino  # Animated assistant eyes for the OLED display
 └── wifi_scanner/

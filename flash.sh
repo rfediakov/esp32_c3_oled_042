@@ -4,6 +4,7 @@ set -euo pipefail
 DEFAULT_FQBN="esp32:esp32:esp32c3"
 PORT=""
 FQBN="$DEFAULT_FQBN"
+PARTITION_SCHEME=""
 COMPILE_ONLY=false
 SKETCH=""
 
@@ -17,6 +18,8 @@ serial port are selected by default.
 Options:
   -p, --port PORT       Use a specific serial port (default: auto-detect USB)
   -b, --fqbn FQBN       Select a board (default: esp32:esp32:esp32c3)
+      --partition-scheme NAME
+                        Select an ESP32 partition scheme (default: sketch-specific)
       --compile-only    Compile and detect the port, but do not upload
   -h, --help            Show this help
 
@@ -42,6 +45,11 @@ while (($#)); do
     -b|--fqbn)
       (($# >= 2)) || fail "Missing value for $1"
       FQBN="$2"
+      shift 2
+      ;;
+    --partition-scheme)
+      (($# >= 2)) || fail "Missing value for $1"
+      PARTITION_SCHEME="$2"
       shift 2
       ;;
     --compile-only)
@@ -80,6 +88,15 @@ fi
 SKETCH_NAME="$(basename "$SKETCH_DIR")"
 [[ -f "$SKETCH_DIR/$SKETCH_NAME.ino" ]] \
   || fail "Expected sketch file: $SKETCH_DIR/$SKETCH_NAME.ino"
+
+if [[ -z "$PARTITION_SCHEME" && "$SKETCH_NAME" == "esp32_field_hub" ]]; then
+  PARTITION_SCHEME="min_spiffs"
+fi
+
+BOARD_OPTIONS=()
+if [[ -n "$PARTITION_SCHEME" ]]; then
+  BOARD_OPTIONS=(--board-options "PartitionScheme=$PARTITION_SCHEME")
+fi
 
 if [[ -n "${ARDUINO_CLI:-}" ]]; then
   CLI="$ARDUINO_CLI"
@@ -123,7 +140,7 @@ fi
 [[ -e "$PORT" ]] || fail "Serial port does not exist: $PORT"
 
 printf 'Compiling %s for %s...\n' "$SKETCH_NAME" "$FQBN"
-"$CLI" compile --fqbn "$FQBN" "$SKETCH_DIR"
+"$CLI" compile --fqbn "$FQBN" "${BOARD_OPTIONS[@]}" "$SKETCH_DIR"
 
 if [[ "$COMPILE_ONLY" == true ]]; then
   printf 'Compile succeeded; upload skipped. Detected port: %s\n' "$PORT"
@@ -131,4 +148,4 @@ if [[ "$COMPILE_ONLY" == true ]]; then
 fi
 
 printf 'Uploading to %s...\n' "$PORT"
-"$CLI" upload --fqbn "$FQBN" --port "$PORT" "$SKETCH_DIR"
+"$CLI" upload --fqbn "$FQBN" "${BOARD_OPTIONS[@]}" --port "$PORT" "$SKETCH_DIR"
